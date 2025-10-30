@@ -1,0 +1,7 @@
+# Optional: render.yaml for advanced config
+services:
+  - type: web
+    name: tictactoe
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn main:app
