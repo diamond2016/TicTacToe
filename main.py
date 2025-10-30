@@ -117,6 +117,24 @@ def update_game():
         "winner": winner
     }), 200
 
+@app.route("/reset_game", methods=["POST"])
+def reset_game():
+# Initial Game state
+    matrix = [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", " ", " "]
+    ]
+    current_player = "X"
+    game_over = False
+    winner = None
+    return jsonify({
+        "message": "Game reset successfully",
+        "matrix": matrix,
+        "current_player": current_player,
+        "game_over": game_over,
+        "winner": winner
+    }), 200
 
 if __name__ == "__main__":
     app.run(debug=False, host="0.0.0.0", port=8080)
