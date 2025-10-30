@@ -39,3 +39,4 @@ Starting from the html static will create a service "save_game" that will update
 
 To be defined how calling the service from javascript. The service may be made simply called with requests, but in any case to expose services wil use Flask. 
 
+The first example uses javacsipt on the client, task is to create an equivalent python because script on client with JS is not allowed. Wi will try to desing an equivalent using routes designed on server. We''use the FlaskTable.
