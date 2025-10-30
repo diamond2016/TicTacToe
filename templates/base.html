@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TicTacToe - Flask Version</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css')}}"
+    />
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</head>
+<body>
+    <div class="title">TicTacToe Game</div>
+    
+
+
+    <div class="error-message" id="error-message"></div>
+
+        <div class="game-container">
+
+            <table class="game-grid">
+                <tr>
+                <td class="game-cell" data-row="0" data-col="0"><a href="{{ url_for('update_game', row=0, col=0) }}">{{ matrix[0][0] }}</a></td>
+                <td class="game-cell" data-row="0" data-col="1"><a href="{{ url_for('update_game', row=0, col=1) }}">{{ matrix[0][1] }}</a></td>
+                <td class="game-cell" data-row="0" data-col="2"><a href="{{ url_for('update_game', row=0, col=2) }}">{{ matrix[0][2] }}</a></td>
+            </tr>
+            <tr>
+                <td class="game-cell" data-row="1" data-col="0"><a href="{{ url_for('update_game', row=1, col=0) }}">{{ matrix[1][0] }}</a></td>
+                <td class="game-cell" data-row="1" data-col="1"><a href="{{ url_for('update_game', row=1, col=1) }}">{{ matrix[1][1] }}</a></td>
+                <td class="game-cell" data-row="1" data-col="2"><a href="{{ url_for('update_game', row=1, col=2) }}">{{ matrix[1][2] }}</a></td>
+            </tr>
+            <tr>
+                <td class="game-cell" data-row="2" data-col="0"><a href="{{ url_for('update_game', row=2, col=0) }}">{{ matrix[2][0] }}</a></td>
+                <td class="game-cell" data-row="2" data-col="1"><a href="{{ url_for('update_game', row=2, col=1) }}">{{ matrix[2][1] }}</a></td>
+                <td class="game-cell" data-row="2" data-col="2"><a href="{{ url_for('update_game', row=2, col=2) }}">{{ matrix[2][2] }}</a></td>
+            </tr>
+        </table>
+        <div class="game-info">
+            <div class="current-player" id="current-player">    Current Player: {{ current_player }}</div>
+            <div class="game-status" id="game-status">  {{ game_status }}</div>
+        </div>
+    </div>
+
+ </body>
+</html>

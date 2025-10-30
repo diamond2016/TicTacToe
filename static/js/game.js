@@ -1,51 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TicTacToe - Flask Version</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/styles.css')}}"
-    />
-</head>
-<body>
-    <div class="title">TicTacToe Game</div>
-    
-    <div class="game-info">
-        <div class="current-player" id="current-player">Current Player: X</div>
-        <div class="game-status" id="game-status">Make your move!</div>
-    </div>
-
-    <div class="error-message" id="error-message"></div>
-
-    <div class="game-container">
-        <table class="game-grid">
-            <tr>
-                <td class="game-cell" data-row="0" data-col="0"></td>
-                <td class="game-cell" data-row="0" data-col="1"></td>
-                <td class="game-cell" data-row="0" data-col="2"></td>
-            </tr>
-            <tr>
-                <td class="game-cell" data-row="1" data-col="0"></td>
-                <td class="game-cell" data-row="1" data-col="1"></td>
-                <td class="game-cell" data-row="1" data-col="2"></td>
-            </tr>
-            <tr>
-                <td class="game-cell" data-row="2" data-col="0"></td>
-                <td class="game-cell" data-row="2" data-col="1"></td>
-                <td class="game-cell" data-row="2" data-col="2"></td>
-            </tr>
-        </table>
-    </div>
-
-    <div class="controls">
-        <button class="btn btn-reset" onclick="{{ url_for('reset_game') }}">New Game</button>
-        </div>
-
-    <script>
         let gameState = {
-            matrix: [["", "", ""], ["", "", ""], ["", "", ""]],
+            matrix: [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]],
             current_player: "X",
             game_over: false,
             winner: null
@@ -76,7 +30,7 @@
             const row = parseInt(cell.dataset.row);
             const col = parseInt(cell.dataset.col);
 
-            if (gameState.game_over || gameState.matrix[row][col] !== "") {
+            if (gameState.game_over || gameState.matrix[row][col] !== " ") {
                 return;
             }
 
@@ -108,35 +62,7 @@
             }
         }
 
-        async function resetGame() {
-            try {
-                const response = await fetch('/reset_game', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-
-                const result = await response.json();
-                
-                if (response.ok) {
-                    gameState = {
-                        matrix: result.matrix,
-                        current_player: result.current_player,
-                        game_over: result.game_over,
-                        winner: result.winner
-                    };
-                    updateUI();
-                    hideError();
-                } else {
-                    showError(result.error || 'Unknown error occurred');
-                }
-            } catch (error) {
-                showError('Error resetting game: ' + error.message);
-            }
-        }
-
-        function updateUI() {
+          function updateUI() {
             // Update current player
             document.getElementById('current-player').textContent = 
                 `Current Player: ${gameState.current_player}`;
@@ -163,10 +89,10 @@
                 const col = index % 3;
                 const value = gameState.matrix[row][col];
 
-                cell.innerHTML = '';
+                cell.innerHTML = ' ';
                 cell.classList.remove('occupied');
 
-                if (value !== "") {
+                if (value !== " ") {
                     const symbolFile = value === 'X' ? '/static/x_symbol.svg' : '/static/o_symbol.svg';
                     cell.innerHTML = `<img src="${symbolFile}" class="symbol-image" alt="${value}">`;
                     cell.classList.add('occupied');
@@ -184,6 +110,3 @@
         function hideError() {
             document.getElementById('error-message').style.display = 'none';
         }
-    </script>
-</body>
-</html>
