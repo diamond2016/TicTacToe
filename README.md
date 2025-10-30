@@ -35,4 +35,7 @@ ____ ____ ____
 
 The grid will be 600 width x 400 height wirh a light background cyan/blue. Row and two columns in cyan bold as in the image
 
+Starting from the html static will create a service "save_game" that will update the context of the grid on the server. It will receive a dictionary of Json with {"row": 0..2, "col": 0..2, "value":'X' for single player, 'O' for second player, ' ' (blank) for empty space.}
+
+To be defined how calling the service from javascript. The service may be made simply called with requests, but in any case to expose services wil use Flask. 
 
