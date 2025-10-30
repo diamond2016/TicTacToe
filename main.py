@@ -53,7 +53,7 @@ def check_winner():
 @app.route("/")
 def index():
     """Serve the main game page"""
-    return render_template("index.html")
+    return render_template("index_flask.html")
 
 @app.route("/get_game_state")
 def get_game_state():

@@ -3,28 +3,27 @@ from flask_table2 import Table, Col
 from markupsafe import Markup
 
 # Declare your table
-class ItemTable(Table):
-    name = Col('Name')
-    description = Col('Description')
+class GameGrid(Table):
+   col1 = Col('Col1')
+   col2 = Col('Col2')
+   col3 = Col('Col3')
 
 # Get some objects
 class Item(object):
-    def __init__(self, name, description):
-        self.name = name
-        self.description = description
-items = [Item('Name1', 'Description1'),
-         Item('Name2', 'Description2'),
-         Item('Name3', 'Description3')]
-# Or, equivalently, some dicts
-items = [dict(name='Name1', description='Description1'),
-         dict(name='Name2', description='Description2'),
-         dict(name='Name3', description='Description3')]
+    def __init__(self, val1, val2, val3):
+        self.col1 = val1
+        self.col2 = val2
+        self.col3 = val3
+
+items = [Item('X','O','X'), 
+         Item('','O',''), 
+         Item('X','','O')]
 
 # Or, more likely, load items from your database with something like
 # items = ItemModel.query.all()  # Commented out since ItemModel is not defined
 
 # Populate the table
-table = ItemTable(items)
+table = GameGrid(items)
 
 # Print the html
 print(table.__html__())
