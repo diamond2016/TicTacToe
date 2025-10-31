@@ -84,11 +84,12 @@ def validate_and_make_move(row, col):
     # Make the move
     matrix[row][col] = current_player
     check_winner()
-
         
     # Switch player if game is not over
     if not game_over:
         current_player = "O" if current_player == "X" else "X"
+    return {"success": True}, 200
+
 
 @app.route("/update_game", methods=["POST"])
 def update_game():
@@ -119,7 +120,9 @@ def update_game():
 
 @app.route("/reset_game", methods=["POST"])
 def reset_game():
-# Initial Game state
+    global current_player, matrix, game_over, winner
+
+    # Initial Game state
     matrix = [
     [" ", " ", " "],
     [" ", " ", " "],
@@ -128,6 +131,7 @@ def reset_game():
     current_player = "X"
     game_over = False
     winner = None
+
     return jsonify({
         "message": "Game reset successfully",
         "matrix": matrix,

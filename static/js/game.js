@@ -1,112 +1,153 @@
-        let gameState = {
-            matrix: [[" ", " ", " "], [" ", " ", " "], [" ", " ", " "]],
-            current_player: "X",
-            game_over: false,
-            winner: null
-        };
+let gameState = {
+  matrix: [
+    [" ", " ", " "],
+    [" ", " ", " "],
+    [" ", " ", " "],
+  ],
+  current_player: "X",
+  game_over: false,
+  winner: null,
+};
 
-        // Initialize game
-        document.addEventListener('DOMContentLoaded', function() {
-            loadGameState();
-            
-            // Add click listeners to cells
-            document.querySelectorAll('.game-cell').forEach(cell => {
-                cell.addEventListener('click', handleCellClick);
-            });
-        });
+// Initialize game (before loading!)
+document.addEventListener("DOMContentLoaded", function () {
+  loadGameState();
 
-        async function loadGameState() {
-            try {
-                const response = await fetch('/get_game_state');
-                gameState = await response.json();
-                updateUI();
-            } catch (error) {
-                showError('Error loading game state: ' + error.message);
-            }
-        }
+  // Add click listeners to cells
+  document.querySelectorAll(".game-cell").forEach((cell) => {
+    cell.addEventListener("click", handleCellClick);
+  });
 
-        async function handleCellClick(event) {
-            const cell = event.target;
-            const row = parseInt(cell.dataset.row);
-            const col = parseInt(cell.dataset.col);
+  // Reset game
+  document
+    .getElementById("reset-button")
+    .addEventListener("click", function (event) {
+      event.preventDefault(); // Prevent the link from navigating
+      resetGameState();
+    });
+});
 
-            if (gameState.game_over || gameState.matrix[row][col] !== " ") {
-                return;
-            }
+async function loadGameState() {
+  try {
+    const response = await fetch("/get_game_state");
+    gameState = await response.json();
+    updateUI();
+  } catch (error) {
+    showError("Error loading game state: " + error.message);
+  }
+}
 
-            try {
-                const response = await fetch('/update_game', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ row: row, col: col })
-                });
+async function handleCellClick(event) {
+  const cell = event.target;
+  const row = parseInt(cell.dataset.row);
+  const col = parseInt(cell.dataset.col);
 
-                const result = await response.json();
-                
-                if (response.ok) {
-                    gameState = {
-                        matrix: result.matrix,
-                        current_player: result.current_player,
-                        game_over: result.game_over,
-                        winner: result.winner
-                    };
-                    updateUI();
-                    hideError();
-                } else {
-                    showError(result.error || 'Unknown error occurred');
-                }
-            } catch (error) {
-                showError('Error making move: ' + error.message);
-            }
-        }
+  if (gameState.game_over || gameState.matrix[row][col] !== " ") {
+    return;
+  }
 
-          function updateUI() {
-            // Update current player
-            document.getElementById('current-player').textContent = 
-                `Current Player: ${gameState.current_player}`;
+  try {
+    const response = await fetch("/update_game", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ row: row, col: col }),
+    });
 
-            // Update game status
-            const statusElement = document.getElementById('game-status');
-            if (gameState.game_over) {
-                if (gameState.winner === "Draw") {
-                    statusElement.textContent = "It's a Draw!";
-                    statusElement.className = "game-status draw";
-                } else {
-                    statusElement.textContent = `Player ${gameState.winner} Wins!`;
-                    statusElement.className = "game-status winner";
-                }
-            } else {
-                statusElement.textContent = "Make your move!";
-                statusElement.className = "game-status";
-            }
+    const result = await response.json();
 
-            // Update grid
-            const cells = document.querySelectorAll('.game-cell');
-            cells.forEach((cell, index) => {
-                const row = Math.floor(index / 3);
-                const col = index % 3;
-                const value = gameState.matrix[row][col];
+    if (response.ok) {
+      gameState = {
+        matrix: result.matrix,
+        current_player: result.current_player,
+        game_over: result.game_over,
+        winner: result.winner,
+      };
+      updateUI();
+      hideError();
+    } else {
+      showError(result.error || "Unknown error occurred");
+    }
+  } catch (error) {
+    showError("Error making move: " + error.message);
+  }
+}
 
-                cell.innerHTML = ' ';
-                cell.classList.remove('occupied');
+function updateUI() {
+  // Update current player
+  document.getElementById(
+    "current-player"
+  ).textContent = `Current Player: ${gameState.current_player}`;
 
-                if (value !== " ") {
-                    const symbolFile = value === 'X' ? '/static/x_symbol.svg' : '/static/o_symbol.svg';
-                    cell.innerHTML = `<img src="${symbolFile}" class="symbol-image" alt="${value}">`;
-                    cell.classList.add('occupied');
-                }
-            });
-        }
+  // Update game status
+  const statusElement = document.getElementById("game-status");
+  if (gameState.game_over) {
+    if (gameState.winner === "Draw") {
+      statusElement.textContent = "It's a Draw!";
+      statusElement.className = "game-status draw";
+    } else {
+      statusElement.textContent = `Player ${gameState.winner} Wins!`;
+      statusElement.className = "game-status winner";
+    }
+  } else {
+    statusElement.textContent = "Make your move!";
+    statusElement.className = "game-status";
+  }
 
-        function showError(message) {
-            const errorElement = document.getElementById('error-message');
-            errorElement.textContent = message;
-            errorElement.style.display = 'block';
-            setTimeout(hideError, 3000);
-        }
+  // Update grid
+  const cells = document.querySelectorAll(".game-cell");
+  cells.forEach((cell, index) => {
+    const row = Math.floor(index / 3);
+    const col = index % 3;
+    const value = gameState.matrix[row][col];
 
-        function hideError() {
-            document.getElementById('error-message').style.display = 'none';
-        }
+    cell.innerHTML = " ";
+    cell.classList.remove("occupied");
+
+    if (value !== " ") {
+      const symbolFile =
+        value === "X" ? "/static/x_symbol.svg" : "/static/o_symbol.svg";
+      cell.innerHTML = `<img src="${symbolFile}" class="symbol-image" alt="${value}">`;
+      cell.classList.add("occupied");
+    }
+    else {
+      cell.innerHTML = " ";
+      cell.classList.remove("occupied");
+    }
+  });
+}
+
+function showError(message) {
+  const errorElement = document.getElementById("error-message");
+  errorElement.textContent = message;
+  errorElement.style.display = "block";
+  setTimeout(hideError, 3000);
+}
+
+function hideError() {
+  document.getElementById("error-message").style.display = "none";
+}
+
+
+
+async function resetGameState() {
+  try {
+    const response = await fetch("/reset_game", {
+      method: "POST",
+    });
+    if (response.ok) {
+      const result = await response.json();
+      gameState = {
+        matrix: result.matrix,
+        current_player: result.current_player,
+        game_over: result.game_over,
+        winner: result.winner,
+      };
+      updateUI();
+      hideError();
+    }
+  } catch (error) {
+    showError("Error resetting game state: " + error.message);
+  }
+}
